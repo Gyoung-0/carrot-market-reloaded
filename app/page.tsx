@@ -1,15 +1,20 @@
 export default function Home() {
   return (
     <main className="bg-gray-100 sm:bg-red-100 md:bg-green-100  lg:bg-cyan-100 xl:bg-orange-100 2xl:bg-purple-100 h-screen flex  items-center justify-center p-5 ">
-      <div className="bg-white shadow-lg p-5 rounded-3xl w-full max-w-screen-sm flex flex-col md:flex-row gap-2">
-        <input
-          className="w-full rounded-full py-3 bg-gray-200 pl-5 outline-none ring ring-transparent focus:ring-orange-500 focus:ring-offset-2 transition-shadow placeholder:drop-shadow"
-          type="text"
-          placeholder="Search Here..."
-        />
-        <button className="bg-black bg-opacity-50 text-white py-2 rounded-full active:scale-90 transition-transform md:px-10 font-medium outline-none">
-          Search
-        </button>
+      <div className="bg-white shadow-lg p-5 rounded-3xl w-full max-w-screen-sm flex flex-col md:flex-row gap-3 ">
+        {["Nico", "Me", "You", "Yourself", ""].map((person, index) => (
+          <div key={index} className="flex items-cneter group gap-5">
+            <div className="size-10 bg-blue-400 rounded-full" />
+            <span className="text-lg font-medium empty:w-24 empty:h-5 empty:rounded-full empty-animate-pulse empty:bg-gray-300
+            group-hover:text-red-500">
+              {person}
+            </span>
+            <div className="size-6 bg-red-500 text-white flex items-center justify-center rounded-full">
+              <span className="z-10">{index}</span>
+              <div className="size-6 bg-red-500 rounded-full absolute animate-ping" />
+            </div>
+          </div>
+        ))}
       </div>
     </main>
   );
