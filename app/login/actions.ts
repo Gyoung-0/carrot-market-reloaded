@@ -1,4 +1,5 @@
 "use server";
+
 import bcrypt from "bcrypt";
 import {
   PASSWORD_MIN_LENGTH,
@@ -19,6 +20,11 @@ const checkEmailExists = async (email: string) => {
       id: true,
     },
   });
+  // if(user){
+  //   return true
+  // } else {
+  //   return false
+  // }
   return Boolean(user);
 };
 
@@ -27,12 +33,15 @@ const formSchema = z.object({
     .string()
     .email()
     .toLowerCase()
-    .refine(checkEmailExists, "An account with this email does not exist"),
-  password: z.string({ required_error: "Password is required" }),
-  // .min(PASSWORD_MIN_LENGTH)
+    .refine(checkEmailExists, "An account with this email does not exist."),
+  password: z.string({
+    required_error: "Password is required",
+  }),
+  // .min(PASSWORD_MIN_LENGTH),
   // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
 });
-export async function login(prevState: any, formData: FormData) {
+
+export async function logIn(prevState: any, formData: FormData) {
   const data = {
     email: formData.get("email"),
     password: formData.get("password"),
@@ -41,7 +50,6 @@ export async function login(prevState: any, formData: FormData) {
   if (!result.success) {
     return result.error.flatten();
   } else {
-    // if the user is found, check password hash
     const user = await db.user.findUnique({
       where: {
         email: result.data.email,
@@ -58,6 +66,7 @@ export async function login(prevState: any, formData: FormData) {
     if (ok) {
       const session = await getSession();
       session.id = user!.id;
+      await session.save();
       redirect("/profile");
     } else {
       return {
@@ -67,7 +76,5 @@ export async function login(prevState: any, formData: FormData) {
         },
       };
     }
-    // log the user in
-    // redirect "/profile"
   }
 }
