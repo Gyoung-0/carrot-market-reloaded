@@ -29,6 +29,9 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
         error: result.error.flatten(),
       };
     } else {
+      // delete previous token
+      // create token
+      // send the token using twilio
       return {
         token: true,
       };
