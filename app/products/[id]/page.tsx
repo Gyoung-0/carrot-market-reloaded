@@ -47,10 +47,15 @@ export default async function ProductDetail({
   return (
     <div>
       <div className="relative aspect-square">
-        <Image fill src={product.photo} alt={product.title} />
+        <Image
+          className="object-cover"
+          fill
+          src={product.photo}
+          alt={product.title}
+        />
       </div>
-      <div className="p-5 flex items-center gap-3 border-b border-neutral-600">
-        <div className="size-10 rounded-full">
+      <div className="p-5 flex items-center gap-3 border-b border-neutral-600 ">
+        <div className="size-10 overflow-hidden rounded-full">
           {product.user.avatar !== null ? (
             <Image
               src={product.user.avatar}
@@ -78,7 +83,7 @@ export default async function ProductDetail({
           {formatToWon(product.price)}원
         </span>
         {isOwner ? (
-          <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
+          <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
             Delete product
           </button>
         ) : null}
