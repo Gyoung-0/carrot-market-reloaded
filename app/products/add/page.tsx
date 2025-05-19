@@ -32,6 +32,9 @@ export default function AddProduct() {
     const url = URL.createObjectURL(file);
     setPreview(url);
   };
+  const interceoAction = async (_: any, formData: FormData) => {
+    //upload image to cluodflare
+  };
   const [state, action] = useFormState(uploadProduct, null);
   return (
     <div>
