@@ -5,6 +5,9 @@ const nextConfig = {
       {
         hostname: "avatars.githubusercontent.com", // ✅ 외부 이미지 허용 도메인 추가
       },
+      {
+        hostname: "imagedelivery.net",
+      },
     ],
   },
 };

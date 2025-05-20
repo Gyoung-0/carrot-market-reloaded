@@ -1,3 +1,3 @@
 export default function Potato() {
-  return <h1>i match</h1>;
+  return <h1>I match!</h1>;
 }

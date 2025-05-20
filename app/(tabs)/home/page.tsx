@@ -1,11 +1,13 @@
-import ListProduct from "@/components/list-product";
 import ProductList from "@/components/product-list";
 import db from "@/lib/db";
+import { unstable_cache as nextCache, revalidatePath } from "next/cache";
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { Prisma } from "@prisma/client/extension";
 import Link from "next/link";
 
+const getCachedProducts = nextCache(getInitialProducts, ["home-products"]);
+
 async function getInitialProducts() {
+  console.log("hit!!!");
   const products = await db.product.findMany({
     select: {
       title: true,
@@ -21,19 +23,26 @@ async function getInitialProducts() {
   });
   return products;
 }
+
+// ✅ Prisma 없이 타입 추론
 export type InitialProducts = Awaited<ReturnType<typeof getInitialProducts>>;
 
 export default async function Products() {
-  const initialProducts = await getInitialProducts();
+  const initialProducts = await getCachedProducts();
+  const revalidate = async () => {
+    "use server";
+    revalidatePath("/home");
+  };
   return (
     <div>
-      <Link href="/products/recent">Recent Products</Link>
+      <Link href="/home/recent">Recent products</Link>
       <ProductList initialProducts={initialProducts} />
+      <form action={revalidate}>
+        <button>Revalidate</button>
+      </form>
       <Link
         href="/products/add"
-        className="bg-orange-500 flex
-       items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white
-       transition-colors hover:bg-orange-400"
+        className="bg-orange-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400"
       >
         <PlusIcon className="size-10" />
       </Link>
