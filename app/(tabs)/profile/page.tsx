@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 
 async function getUser() {
   const session = await getSession();
@@ -16,8 +17,13 @@ async function getUser() {
   }
   notFound();
 }
-export default async function Profile() {
+
+async function Username() {
   const user = await getUser();
+  return <h1>Welecome! {user?.username}</h1>;
+}
+
+export default async function Profile() {
   const logOut = async () => {
     "use server";
     const session = await getSession();
@@ -26,7 +32,9 @@ export default async function Profile() {
   };
   return (
     <div>
-      <h1>Welecome! {user?.username}</h1>
+      <Suspense fallback={"Hello!"}>
+        <Username />
+      </Suspense>
       <form action={logOut}>
         <input type="submit" value="Log out" />
       </form>

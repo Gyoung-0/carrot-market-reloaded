@@ -4,7 +4,16 @@ import { unstable_cache as nextCache, revalidatePath } from "next/cache";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-const getCachedProducts = nextCache(getInitialProducts, ["home-products"]);
+const getCachedProducts = nextCache(getInitialProducts, ["home-products"], {
+  tags: ["product", "list"],
+});
+
+fetch("http://api.com", {
+  next: {
+    revalidate: 50,
+    tags: ["products"],
+  },
+});
 
 async function getInitialProducts() {
   console.log("hit!!!");
@@ -24,11 +33,14 @@ async function getInitialProducts() {
   return products;
 }
 
+export const dynamic = "force-dynamic";
+// export const revalidate = 60;
+
 // ✅ Prisma 없이 타입 추론
 export type InitialProducts = Awaited<ReturnType<typeof getInitialProducts>>;
 
 export default async function Products() {
-  const initialProducts = await getCachedProducts();
+  const initialProducts = await getInitialProducts();
   const revalidate = async () => {
     "use server";
     revalidatePath("/home");
